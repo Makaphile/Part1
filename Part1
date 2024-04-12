@@ -1,0 +1,91 @@
+using System;
+
+class Ingredient {
+    public string Name { get; set; }
+    public double Quantity { get; set; }
+    public string Unit { get; set; }
+
+    public Ingredient(string name, double quantity, string unit) {
+        Name = name;
+        Quantity = quantity;
+        Unit = unit;
+    }
+}
+
+class Recipe {
+    public Ingredient[] Ingredients { get; set; }
+    public string[] Steps { get; set; }
+    private double[] originalQuantities; 
+
+    public Recipe(int numIngredients, int numSteps) {
+        Ingredients = new Ingredient[numIngredients];
+        Steps = new string[numSteps];
+        originalQuantities = new double[numIngredients];
+    }
+
+    public void AddIngredient(int index, string name, double quantity, string unit) {
+        Ingredients[index] = new Ingredient(name, quantity, unit);
+        originalQuantities[index] = quantity; 
+    }
+
+    public void AddStep(int index, string step) {
+        Steps[index] = step;
+    }
+
+    public void DisplayRecipe() {
+        Console.WriteLine("Ingredients:");
+        foreach (var ingredient in Ingredients) {
+            Console.WriteLine($"{ingredient.Quantity} {ingredient.Unit} of {ingredient.Name}");
+        }
+        
+        Console.WriteLine("\nSteps:");
+        for (int i = 0; i < Steps.Length; i++) {
+            Console.WriteLine($"{i+1}. {Steps[i]}");
+        }
+    }
+
+    public void ScaleRecipe(double factor) {
+        foreach (var ingredient in Ingredients) {
+            ingredient.Quantity *= factor;
+        }
+    }
+
+    public void ResetQuantities() {
+        for (int i = 0; i < Ingredients.Length; i++) {
+            Ingredients[i].Quantity = originalQuantities[i];
+        }
+    }
+
+    public void ClearRecipe() {
+        Ingredients = new Ingredient[Ingredients.Length];
+        Steps = new string[Steps.Length];
+        originalQuantities = new double[originalQuantities.Length];
+    }
+}
+
+class Program {
+    static void Main(string[] args) {
+        recipe.AddIngredient(0, "Flour", 2.5, "cups");
+        recipe.AddIngredient(1, "Sugar", 1.5, "cups");
+        recipe.AddIngredient(2, "Eggs", 3, "units");
+
+        recipe.AddStep(0, "Preheat oven to 350°F.");
+        recipe.AddStep(1, "Mix flour and sugar in a bowl.");
+        recipe.AddStep(2, "Add eggs to the mixture and stir well.");
+        recipe.AddStep(3, "Pour batter into a greased baking pan.");
+
+        Console.WriteLine("Original Recipe:");
+        recipe.DisplayRecipe();
+
+        Console.WriteLine("\nScaled Recipe (double):");
+        recipe.ScaleRecipe(2);
+        recipe.DisplayRecipe();
+
+        Console.WriteLine("\nResetting quantities to original values:");
+        recipe.ResetQuantities();
+        recipe.DisplayRecipe();
+
+        recipe.ClearRecipe();
+        Console.WriteLine("\nRecipe data cleared.");
+    }
+}
